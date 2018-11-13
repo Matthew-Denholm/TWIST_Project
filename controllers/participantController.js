@@ -36,8 +36,58 @@ exports.participant_detail = function(req, res, next) {
 ;}
 
 // Display Create form on Get
+exports.participant_create_get = function(req, res, next) {
+    res.render('participant_form', { title: 'New Participant'});
+};
 
 // handle Create on Post
+exports.participant_create_post = [
+
+    // Validate fields.
+    body('firstName').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+        .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    body('lastName').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
+        .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
+    body('address').isLength({ min: 1 }).trim().withMassage('No address entered'),
+    body('email').isLength({ min: 1 }).trim().withMassage('No email entered'),
+    
+
+
+    // Sanitize fields.
+    sanitizeBody('first_name').trim().escape(),
+    sanitizeBody('family_name').trim().escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
+            return;
+        }
+        else {
+            // Data from form is valid.
+
+            // Create an Author object with escaped and trimmed data.
+            var author = new Author(
+                {
+                    first_name: req.body.first_name,
+                    family_name: req.body.family_name,
+                    date_of_birth: req.body.date_of_birth,
+                    date_of_death: req.body.date_of_death
+                });
+            author.save(function (err) {
+                if (err) { return next(err); }
+                // Successful - redirect to new author record.
+                res.redirect(author.url);
+            });
+        }
+    }
+];
+
 
 // display delete form on get
 
