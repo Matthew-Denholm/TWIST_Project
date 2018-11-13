@@ -36,11 +36,18 @@ exports.participant_detail = function(req, res, next) {
 ;}
 
 // Display Create form on Get
-exports.participant_create_get = function(req, res, next) {
-    res.render('participant_form', { title: 'New Participant'});
+exports.participant_create_get = function(req, res) {
+    res.send('NOT IMPLEMENTED: create form on GET');
+};
+
+
+
+// handle Create on Post
+exports.participant_create_post = function(req, res, next) {
+    res.send('NOT IMPLEMENTED: create form on POST')
+    //res.render('participant_form', { title: 'New Participant'});
 };
 /*
-// handle Create on Post
 exports.participant_create_post = [
 
     // Validate fields.
@@ -92,10 +99,22 @@ exports.participant_create_post = [
 ];
 */
 
-// display delete form on get
+// Display delete form on GET.
+exports.participant_delete_get = function(req, res) {
+    res.send('NOT IMPLEMENTED: delete GET');
+};
 
-// handle delete on post
+// Handle delete on POST.
+exports.participant_delete_post = function(req, res) {
+    res.send('NOT IMPLEMENTED: delete POST');
+};
 
-//display update form on get
+// Display update form on GET.
+exports.participant_update_get = function(req, res) {
+    res.send('NOT IMPLEMENTED: update GET');
+};
 
-//handle update on post
+// Handle update on POST.
+exports.participant_update_post = function(req, res) {
+    res.send('NOT IMPLEMENTED: update POST');
+};

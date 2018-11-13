@@ -18,30 +18,30 @@ router.get('/Participant/:id', Participant.participant_detail);
 
 router.get('/Participant/create', Participant.participant_create_get);
 
-//router.post('/Participant/create', Participant.participant_create_post);
+router.post('/Participant/create', Participant.participant_create_post);
 
-//router.get('/Participant/update',Participant.participant_update_get);
+router.get('/Participant/update',Participant.participant_update_get);
 
-//router.post('/Participant/update',Participant.participant_update_post);
+router.post('/Participant/update',Participant.participant_update_post);
 
-//router.get('/Participant/delete',Participant.participant_delete_get);
+router.get('/Participant/delete',Participant.participant_delete_get);
 
-//router.post('/Participant/delete',Participant.participant_delete_post);
+router.post('/Participant/delete',Participant.participant_delete_post);
 
 //Presenter Routes
 ///////////////////////////////////////////////
 
-//router.get('/Presenter/create', Presenter.presenter_create_get);
+router.get('/Presenter/create', Presenter.presenter_create_get);
 
-//router.post('/Presenter/create', Presenter.presenter_create_post);
+router.post('/Presenter/create', Presenter.presenter_create_post);
 
-//router.get('/Presenter/update',Presenter.presenter_update_get);
+router.get('/Presenter/update',Presenter.presenter_update_get);
 
-//router.post('/Presenter/update',Presenter.presenter_update_post);
+router.post('/Presenter/update',Presenter.presenter_update_post);
 
-//router.get('/Presenter/delete',Presenter.presenter_delete_get);
+router.get('/Presenter/delete',Presenter.presenter_delete_get);
 
-//router.post('/Presenter/delete',Presenter.presenter_delete_post);
+router.post('/Presenter/delete',Presenter.presenter_delete_post);
 
 //Schedule Routes
 ///////////////////////////////////////////////
