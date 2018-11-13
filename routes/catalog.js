@@ -8,37 +8,17 @@ var Schedule = require('../controllers/scheduleController');
 //var Session = require('../controllers/Session');
 var Topic = require('../controllers/topicController');
 
-// GET users listing. 
-router.get('/', function(req, res) {
-	/*const query = req.query
-	School.find(query)
-		.then(function(schools) {
-			res.json({
-				confirmation: 'success',
-				data: schools
-			})
-		})
-		if(function(err) {
-			res.json({
-				confirmation: 'fail',
-				message: err.message
-			})
-		}) */
-		res.send('respond with a resource');
-});
-
-
 //router.get('/', Participant.index); //landing page
 
 //Participant Routes
 ///////////////////////////////////////////////
-//router.get('/Participant', Participant.participant_list);
+router.get('/Participant', Participant.participant_list);
 
 router.get('/Participant/:id', Participant.participant_detail);
 
 router.get('/Participant/create', Participant.participant_create_get);
 
-router.post('/Participant/create', Participant.participant_create_post);
+//router.post('/Participant/create', Participant.participant_create_post);
 
 //router.get('/Participant/update',Participant.participant_update_get);
 
