@@ -50,12 +50,13 @@ exports.participant_create_post = [
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
     body('address').isLength({ min: 1 }).trim().withMassage('No address entered'),
     body('email').isLength({ min: 1 }).trim().withMassage('No email entered'),
-    
 
 
     // Sanitize fields.
     sanitizeBody('first_name').trim().escape(),
     sanitizeBody('family_name').trim().escape(),
+    sanitizeBody('address').trim().escape(),
+    sanitizeBody('email').trim().escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -65,24 +66,26 @@ exports.participant_create_post = [
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
+            res.render('participant_form', { title: 'New Participant', author: req.body, errors: errors.array() });
             return;
         }
         else {
             // Data from form is valid.
 
             // Create an Author object with escaped and trimmed data.
-            var author = new Author(
+            var participant = new Participant(
                 {
-                    first_name: req.body.first_name,
-                    family_name: req.body.family_name,
-                    date_of_birth: req.body.date_of_birth,
-                    date_of_death: req.body.date_of_death
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    addres: req.body.addres,
+                    email: req.body.email,
+                    timestamp: Date.now
+
                 });
-            author.save(function (err) {
+            participant.save(function (err) {
                 if (err) { return next(err); }
-                // Successful - redirect to new author record.
-                res.redirect(author.url);
+                // Successful - redirect to details.
+                res.redirect(participant.url);
             });
         }
     }
