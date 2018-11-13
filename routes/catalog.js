@@ -18,7 +18,7 @@ router.get('/Participant/:id', Participant.participant_detail);
 
 router.get('/Participant/create', Participant.participant_create_get);
 
-router.post('/Participant/create', Participant.participant_create_post);
+//router.post('/Participant/create', Participant.participant_create_post);
 
 //router.get('/Participant/update',Participant.participant_update_get);
 

@@ -1,5 +1,5 @@
-var Participant = require('../models/participant');
-var HighSchool = require('../models/highschool');
+var Participant = require('../models/Participant');
+var HighSchool = require('../models/HighSchool');
 
 // Display all.
 exports.participant_list = function(req, res, next) {
@@ -39,7 +39,7 @@ exports.participant_detail = function(req, res, next) {
 exports.participant_create_get = function(req, res, next) {
     res.render('participant_form', { title: 'New Participant'});
 };
-
+/*
 // handle Create on Post
 exports.participant_create_post = [
 
@@ -90,7 +90,7 @@ exports.participant_create_post = [
         }
     }
 ];
-
+*/
 
 // display delete form on get
 
