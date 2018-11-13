@@ -79,7 +79,7 @@ exports.participant_create_post = [
                     lastName: req.body.lastName,
                     addres: req.body.addres,
                     email: req.body.email,
-                    timestamp: Date.now
+                    timestamp: Date
 
                 });
             participant.save(function (err) {
