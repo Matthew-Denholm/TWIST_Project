@@ -1,44 +1,24 @@
 var express = require('express');
 var router = express.Router();
-//var School = require('../controllers/HighSchool');
+//var School = require('../controllers/schoolController');
 var Participant = require('../controllers/participantController');
 var Presenter = require('../controllers/presenterController');
 //var Room = require('../controllers/Room');
 var Schedule = require('../controllers/scheduleController');
-//var Session = require('../controllers/Session');
+var Session = require('../controllers/sessionController');
 var Topic = require('../controllers/topicController');
-
-// GET users listing. 
-router.get('/', function(req, res) {
-	/*const query = req.query
-	School.find(query)
-		.then(function(schools) {
-			res.json({
-				confirmation: 'success',
-				data: schools
-			})
-		})
-		if(function(err) {
-			res.json({
-				confirmation: 'fail',
-				message: err.message
-			})
-		}) */
-		res.send('respond with a resource');
-});
-
 
 //router.get('/', Participant.index); //landing page
 
 //Participant Routes
 ///////////////////////////////////////////////
-//router.get('/Participant', Participant.participant_list);
+router.get('/Participant', Participant.participant_list);
 
-router.get('/Participant/:id', Participant.participant_detail);
+//router.get('/Participant/:id', Participant.participant_detail);
 
-router.get('/Participant/create', Participant.participant_create_get);
+//router.get('/Participant/create', Participant.participant_create_get);
 
-router.post('/Participant/create', Participant.participant_create_post);
+//router.post('/Participant/create', Participant.participant_create_post);
 
 //router.get('/Participant/update',Participant.participant_update_get);
 
@@ -50,6 +30,7 @@ router.post('/Participant/create', Participant.participant_create_post);
 
 //Presenter Routes
 ///////////////////////////////////////////////
+//router.get('/Presenter', Presenter.presenter_list);
 
 //router.get('/Presenter/create', Presenter.presenter_create_get);
 
@@ -65,6 +46,7 @@ router.post('/Participant/create', Participant.participant_create_post);
 
 //Schedule Routes
 ///////////////////////////////////////////////
+//router.get('/Schedule', Schedule.schedule_list);
 
 //router.get('/Schedule/create', Schedule.schedule_create_get);
 
