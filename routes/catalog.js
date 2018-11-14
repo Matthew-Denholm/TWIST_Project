@@ -14,7 +14,7 @@ var Topic = require('../controllers/topicController');
 ///////////////////////////////////////////////
 router.get('/Participant', Participant.participant_list);
 
-router.get('/Participant/:id', Participant.participant_detail);
+//router.get('/Participant/:id', Participant.participant_detail);
 
 router.get('/Participant/create', Participant.participant_create_get);
 

@@ -1,6 +1,7 @@
 var Participant = require('../models/Participant');
 var HighSchool = require('../models/HighSchool');
-
+var Topic = require('../models/Topic');
+var async = require('async');
 // Display all.
 exports.participant_list = function(req, res, next) {
     Participant.find()
@@ -37,16 +38,17 @@ exports.participant_detail = function(req, res, next) {
 
 // Display Create form on Get
 exports.participant_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: create form on GET');
+//    res.send('NOT IMPLEMENTED: create form on GET');
+//};
+    res.render('participant_create', { title: 'New Participant'});
 };
 
 
 
 // handle Create on Post
 exports.participant_create_post = function(req, res, next) {
-    res.send('NOT IMPLEMENTED: create form on POST')
-    //res.render('participant_form', { title: 'New Participant'});
-};
+    res.send('NOT IMPLEMENTED: create form on POST');
+};  
 /*
 exports.participant_create_post = [
 
