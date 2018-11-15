@@ -40,17 +40,10 @@ exports.participant_detail = function(req, res, next) {
 
 // Display Create form on Get
 exports.participant_create_get = function(req, res) {
-//    res.send('NOT IMPLEMENTED: create form on GET');
-//};
     res.render('participant_create', { title: 'New Participant'});
 };
 
-
-
-// handle Create on Post
-//exports.participant_create_post = function(req, res, next) {
-//    res.send('NOT IMPLEMENTED: create form on POST');
-//};  
+// handle Create on Post 
 exports.participant_create_post = [
 
     // Validate fields.
@@ -60,7 +53,6 @@ exports.participant_create_post = [
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
     body('address').isLength({ min: 1 }).trim().withMessage('no address entered'),
     body('email').isLength({ min: 1 }).trim().withMessage('no email entered'),
-
 
     // Sanitize fields.
     sanitizeBody('firstname').trim().escape(),
@@ -84,9 +76,8 @@ exports.participant_create_post = [
                 {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
-                    addres: req.body.addres,
-                    email: req.body.email,
-                    timestamp: Date
+                    address: req.body.address,
+                    email: req.body.email
                 });
             participant.save(function (err) {
                 if (err) { return next(err); }
@@ -98,8 +89,22 @@ exports.participant_create_post = [
 ];
 
 // Display delete form on GET.
-exports.participant_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: delete GET');
+exports.participant_delete_get = function(req, res, next) {
+    async.parallel({
+        participant: function(callback) {
+            Participant.findById(req.params.id).exec(callback)
+        },
+        participant_topic: function(callback){
+            Topic.find({ 'participant': req.params.id }).exec(callback)
+        },
+    },
+        function(err, results) {
+            if (err) {return next(err)};
+            if (results.participant==null) {
+                res.redirect('catalog/participants');
+            };
+        res.render('participant_delete', { title: 'Delete Participant', participant: results.participant, participant_topic: results.participant_topic});
+    });
 };
 
 // Handle delete on POST.

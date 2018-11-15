@@ -2,12 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var ParticipantSchema = new Schema({
-    Participant_ID: {type: String, required: true,},
     lastName: {type: String, max: 100},
     firstName: {type: String, max: 100},
     address: {type: String},
     email: {type: String},
-    timeStamp: {type: Date},
+    timeStamp: {type: Date, default: Date.now, },
     participantType: {type: String}
   });
 
@@ -22,7 +21,7 @@ ParticipantSchema
 ParticipantSchema
 .virtual('url')
 .get(function () {
-  return '/catalog/participant/' + this._id;
+  return '/catalog/participant/:id' + this._id;
 });
 
 //Export model
