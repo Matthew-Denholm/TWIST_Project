@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
     sessionNum: {type: String, required: true,},
-    time: {type: String, },
+    time: {type: Date, },
 });
 
 // virtual for url

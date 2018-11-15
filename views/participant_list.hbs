@@ -1,0 +1,10 @@
+<ul>
+    {{#if participant_list}}
+    {{#each participant_list}}
+    <li>{{participant}}</li>
+    {{/each}}
+    {{else}}
+        <h1>No participants</h1>
+    {{/if}}
+</ul>
+<a href="/catalog/participant/create">Create New Participant</a>
