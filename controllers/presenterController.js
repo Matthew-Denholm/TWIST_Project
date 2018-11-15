@@ -1,4 +1,6 @@
 var Presenter = require('../models/Presenter');
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
 exports.presenter_list = function(req, res) {
