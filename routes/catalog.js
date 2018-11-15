@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var School = require('../controllers/highschoolController');
+var School = require('../controllers/schoolController');
 var Participant = require('../controllers/participantController');
 var Presenter = require('../controllers/presenterController');
 var Room = require('../controllers/roomController');
@@ -12,6 +12,7 @@ var Topic = require('../controllers/topicController');
 
 //Participant Routes
 ///////////////////////////////////////////////
+
 router.get('/Participant/create', Participant.participant_create_get);
 
 router.post('/Participant/create', Participant.participant_create_post);
