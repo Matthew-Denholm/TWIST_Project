@@ -123,5 +123,23 @@ router.get('/school/:id', School.school_detail);
 
 router.get('/school', School.school_list)
 
+//Room Routes
+///////////////////////////////////////////////
+router.get('/Room/create', Room.room_create_get);
+
+router.post('/Room/create', Room.room_create_post);
+
+router.get('/Room/:id/delete',Room.room_delete_get);
+
+router.post('/Room/:id/delete',Room.room_delete_post);
+
+router.get('/Room/:id/update',Room.room_update_get);
+
+router.post('/Room/:id/update',Room.room_update_post);
+
+router.get('/room/:id', Room.room_detail);
+
+router.get('/room', Room.room_list)
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = router;
