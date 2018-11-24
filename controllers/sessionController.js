@@ -1,10 +1,15 @@
-var Session = require('../models/session');
+var Session = require('../models/Session');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
 exports.session_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: list');
+    Session.find()
+    .sort([['sessionNum', 'ascending']])
+    .exec(function (err, list_sessions) {
+        if (err) { return next(err);}
+        res.render('session_list', { title: 'Sessions', session_list: list_sessions});
+    });
 };
 
 // Display detail page.
