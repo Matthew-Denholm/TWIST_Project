@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var School = require('../controllers/highschoolController');
+var School = require('../controllers/schoolController');
 var Participant = require('../controllers/participantController');
 var Presenter = require('../controllers/presenterController');
 var Room = require('../controllers/roomController');
@@ -84,6 +84,44 @@ router.post('/Topic/:id/update',Topic.topic_update_post);
 router.get('/topic/:id', Topic.topic_detail);
 
 router.get('/topic', Topic.topic_list)
+
+//Session Routes
+///////////////////////////////////////////////
+
+router.get('/Session/create', Session.session_create_get);
+
+router.post('/Session/create', Session.session_create_post);
+
+router.get('/Session/:id/delete',Session.session_delete_get);
+
+router.post('/Session/:id/delete',Session.session_delete_post);
+
+router.get('/Session/:id/update',Session.session_update_get);
+
+router.post('/Session/:id/update',Session.session_update_post);
+
+router.get('/session/:id', Session.session_detail);
+
+router.get('/session', Session.session_list)
+
+//School Routes
+///////////////////////////////////////////////
+
+router.get('/School/create', School.school_create_get);
+
+router.post('/School/create', School.school_create_post);
+
+router.get('/School/:id/delete',School.school_delete_get);
+
+router.post('/School/:id/delete',School.school_delete_post);
+
+router.get('/School/:id/update',School.school_update_get);
+
+router.post('/School/:id/update',School.school_update_post);
+
+router.get('/school/:id', School.school_detail);
+
+router.get('/school', School.school_list)
 
 //Room Routes
 ///////////////////////////////////////////////
