@@ -1,17 +1,17 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var HighSchoolSchema = new Schema({
+var SchoolSchema = new Schema({
     hs_id: {type: String, required: true,},
     hsName: {type: String, }
 });
 
 // virtual for url
-HighSchoolSchema
+SchoolSchema
 .virtual('url')
 .get(function() {
-    return '/catalog/highschool/' + this._id;
+    return '/catalog/school/' + this._id;
 });
 
 //export
-module.exports = mongoose.model('HighSchool', HighSchoolSchema);
+module.exports = mongoose.model('School', SchoolSchema);
