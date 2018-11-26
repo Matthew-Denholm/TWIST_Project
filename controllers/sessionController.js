@@ -75,20 +75,90 @@ exports.session_create_post = [
 
 // Display delete form on GET.
 exports.session_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: delete GET');
+    async.parallel({
+        session: function(callback) {
+            Session.findById(req.params.id)
+            .exec(callback)
+        },
+        function(err, results) {
+            if (err) { return next(err);}
+            if (results.session==null) {
+                res.redirect('catalog/session');
+            }
+            res.render('session_delete', { title: 'Delete Session', session: results.session})
+        }
+    });
 };
 
 // Handle delete on POST.
 exports.session_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: delete POST');
+    async.parallel({
+        session: function(callback) {
+            Session.findById(req.params.id)
+            .exec(callback)
+        },
+        function(err, results) {
+            if (err) { return next(err);}
+            if (results.session==null) {
+				Session.findByIdAndRemove(req.body.sessionid, function deleteSession(err) {
+                if (err) { return next(err); }
+                // Success - go to book list
+                res.redirect('/catalog/session')
+				})
+            }
+        }
+    });
 };
 
 // Display update form on GET.
 exports.session_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: update GET');
+	
+    Session.findById(req.params.id, function(err, results) {
+            if (err) { return next(err); }
+			console.log(results);
+            if (results==null) { // No results.
+                var err = new Error('Genre not found');
+                err.status = 404;
+                return next(err);
+            }
+            res.render('session_form', { title: 'Update Session', session: results }); //does not yet exist, needs to be made to function
+        });
 };
 
 // Handle update on POST.
-exports.session_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: update POST');
-};
+exports.session_update_post = [
+	//validate fields
+	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isAlphanumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').isAlphanumeric().withMessage('Name cannot contain non-alphanumeric characters.'),
+
+	//sanitize
+	sanitizeBody('sessionNum').trim().escape(),
+    sanitizeBody('sessionName').trim().escape(),
+
+	//processing request
+ 	function(req, res, next) {
+		// Extract the validation errors from a request.
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) { //If errors exist...
+            // Render form again with sanitized values/errors messages.
+            res.render('session_form', { title: 'Update Session', author: req.body, errors: errors.array() }); //again, session_form doesn't exist yet
+            return;
+        }
+        else {
+            // Data from form is valid.
+            // Create an Author object with escaped and trimmed data.
+            var session = new Session(
+                {
+                    sessionNum: req.body.sessionNum,
+                    sessionName: req.body.sessionName,
+                    time: req.body.time,
+					 _id:req.params.id
+                });
+            session.findByIdAndUpdate(req.params.id, session, {}, function (err, thesession) {
+                if (err) { return next(err); }
+                // Successful - redirect to details.
+                res.redirect(session.url);
+            });
+        }
+	}
+];
