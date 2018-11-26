@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
-    sessionNum: {type: String, required: true,},
+    sessionNum: {type: String, required: true},
+	sessionName: {type: String, required: true},
     time: {type: Date, default: Date.now},
 });
 
