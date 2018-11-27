@@ -1,4 +1,5 @@
 var Session = require('../models/Session');
+var async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -22,7 +23,7 @@ exports.session_detail = function(req, res, next) {
         function(err, results) {
             if (err) { return next(err);}
             if (results.participant==null) {
-                var err = new Error('Participant not found');
+                var err = new Error('Session not found');
                 err.status = 404;
                 return next(err)
             }
@@ -39,12 +40,13 @@ exports.session_create_get = function(req, res) {
 // Handle  create on POST.
 exports.session_create_post = [
 	//validate fields
-	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isAlphanumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').isAlphanumeric().withMessage('Name cannot contain non-alphanumeric characters.'),
-
+	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.'),
+	body('time').isLength({min:1}).trim().withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
     sanitizeBody('sessionName').trim().escape(),
+	sanitizeBody('time').trim().escape(),
 
 	//processing request
  	function(req, res, next) {
@@ -73,14 +75,17 @@ exports.session_create_post = [
 ];
 
 // Display delete form on GET.
-exports.session_delete_get = function(req, res) {
+exports.session_delete_get = function(req, res, next) {
     async.parallel({
         session: function(callback) {
+			////////////////////////////////////////
+			//apparently an error here (undefined)
+			////////////////////////////////////////
             Session.findById(req.params.id)
             .exec(callback)
         },
         function(err, results) {
-            if (err) { return next(err);}
+            if (err) { return next(err.body); }
             if (results.session==null) {
                 res.redirect('catalog/session');
             }
@@ -101,7 +106,7 @@ exports.session_delete_post = function(req, res) {
             if (results.session==null) {
 				Session.findByIdAndRemove(req.body.sessionid, function deleteSession(err) {
                 if (err) { return next(err); }
-                // Success - go to book list
+                // Success - go to back to list
                 res.redirect('/catalog/session')
 				})
             }
@@ -116,7 +121,7 @@ exports.session_update_get = function(req, res) {
             if (err) { return next(err); }
 			console.log(results);
             if (results==null) { // No results.
-                var err = new Error('Genre not found');
+                var err = new Error('Session not found');
                 err.status = 404;
                 return next(err);
             }
