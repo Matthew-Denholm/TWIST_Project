@@ -52,12 +52,11 @@ exports.session_create_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) { //If errors exist...
             // Render form again with sanitized values/errors messages.
-            res.render('session_form', { title: 'New Session', author: req.body, errors: errors.array() });
+            res.render('session_form', { title: 'New Session', author: req.body, errors: errors.array() }); //session form is yet to be made
             return;
         }
         else {
             // Data from form is valid.
-            // Create an Author object with escaped and trimmed data.
             var session = new Session(
                 {
                     sessionNum: req.body.sessionNum,
@@ -146,7 +145,6 @@ exports.session_update_post = [
         }
         else {
             // Data from form is valid.
-            // Create an Author object with escaped and trimmed data.
             var session = new Session(
                 {
                     sessionNum: req.body.sessionNum,

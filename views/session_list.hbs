@@ -1,7 +1,7 @@
 <ul>
     {{#if session_list}}
     {{#each session_list}}
-    <li>{{session}}</li>
+    <li>{{Session}} <a href="/catalog/Session/update?id={{_id}}">Update</a> <a href="/catalog/Session/delete?id={{_id}}">Delete</a></li>
     {{/each}}
     {{else}}
         <h1>No Sessions Available</h1>
