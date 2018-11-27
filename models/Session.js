@@ -14,5 +14,11 @@ SessionSchema
     return '/catalog/session/' + this._id;
 });
 
+//virtual for Description
+SessionSchema
+.virtual('Session')
+.get(function() {
+	return "Session " + this.sessionNum + ": " + this.sessionName;
+});
 //export
 module.exports = mongoose.model('Session', SessionSchema);

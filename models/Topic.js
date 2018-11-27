@@ -14,5 +14,10 @@ TopicSchema
     return '/catalog/topic/' + this._id;
 });
 
+TopicSchema
+.virtual('topic')
+.get(function() {
+	return this.title + ': ' + this.description;
+});
 //export
 module.exports = mongoose.model('Topic', TopicSchema);
