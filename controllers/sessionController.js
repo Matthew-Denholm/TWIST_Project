@@ -85,7 +85,7 @@ exports.session_delete_get = function(req, res, next) {
             .exec(callback)
         },
         function(err, results) {
-            if (err) { return next(err.body); }
+            if (err) { return next(err); }
             if (results.session==null) {
                 res.redirect('catalog/session');
             }
