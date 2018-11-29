@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
     sessionNum: {type: Number, required: true},
-	sessionName: {type: String, required: true},
+	sessionName: {type: String, required: true}, //enum: ['Accounting/Finance', 'Attorney', 'City Government', 'Communications and Marketing', 'Food Science', 'Graphic Designer', 'Highway Patrol', 'Pediatric Care', 'Pharmacy', 'Pilot', 'Speech Pathology', 'Social Work/Mental Health', 'Zoo Veterinary Medicine'], default: 'Attorney'},
     time: {type: String, required: true}
 });
 

@@ -41,7 +41,7 @@ exports.session_create_get = function(req, res) {
 exports.session_create_post = [
 	//validate fields
 	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the sessions\' name.'),
 	body('time').isLength({min:1}).trim().withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
@@ -76,27 +76,22 @@ exports.session_create_post = [
 
 // Display delete form on GET.
 exports.session_delete_get = function(req, res, next) {
-    async.parallel({
-        session: function(callback) {
-			////////////////////////////////////////
-			//apparently an error here (undefined)
-			////////////////////////////////////////
-            Session.findById(req.params.id)
-            .exec(callback)
-        },
-        function(err, results) {
-            if (err) { return next(err); }
-            if (results.session==null) {
-                res.redirect('catalog/session');
-            }
-            res.render('session_delete', { title: 'Delete Session', session: results.session})
-        }
-    });
+	
+        Session.findById(req.params.id).populate('Session').exec(function(err, session) {
+			if (err) { return next(err); }
+			if (session=null) { res.redirect('/catalog/session'); }
+            res.render('session_delete', { title: 'Delete Session', session: session})
+        });
 };
 
 // Handle delete on POST.
 exports.session_delete_post = function(req, res) {
-    async.parallel({
+			
+	Session.findByIdAndRemove(req.body.session_id, function deleteSession(err) {
+		if (err) {return next(err); }
+		res.redirect('/catalog/session')
+	});
+   /* async.parallel({
         session: function(callback) {
             Session.findById(req.params.id)
             .exec(callback)
@@ -111,7 +106,7 @@ exports.session_delete_post = function(req, res) {
 				})
             }
         }
-    });
+    });*/
 };
 
 // Display update form on GET.
