@@ -1,4 +1,5 @@
 var Presenter = require('../models/Presenter');
+var async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -13,37 +14,27 @@ exports.presenter_list = function(req, res, next) {
 };
 
 // Display detail page.
-exports.presenter_detail = function(req, res) {
-    async.parallel({
-        presenter: function(callback) {
-            Presenter.findById(req.params.id)
-            .exec(callback)
-        },
-        presenter_topic: function(callback){
-            Topic.find({ 'presenter': req.params.id}, 'topic summary')
-            .exec(callback)
-        },
-        function(err, results){
-            if (err) {return next(err)}
-            if (results.participant==null){
-                var err = new Error('Presenter not found');
-                err.status = 404;
-                return next(err)
-            }
-            res.render('presenter_detail', {
-                title: 'Presenter Details',
-                presenter: results.presenter,
-                presenter_topic: result.presenter_topic
-            })
+exports.presenter_detail = function(req, res, next) {
+    Presenter.findById(req.params.id)
+    .exec(function(err, results){
+        if (err) {return next(err);}
+        if (results.presenter==null){
+            var err = new Error('Presenter not found');
+            err.status = 404;
+            return next(err)
         }
-    })
+        res.render('presenter_detail', {
+            title: 'Presenter Details',
+            presenter: results.presenter
+        })
+    })  
 };
 
 
 // Display  create form on GET.
 exports.presenter_create_get = function(req, res) {
     res.render('presenter_create', {
-        title: 'New Participant'
+        title: 'New Presenter'
     });
 };
 
@@ -78,7 +69,7 @@ exports.presenter_create_post = [
                 address: req.body.address,
                 email: req.body.email
             });
-            participant.save(function (err) {
+            presenter.save(function (err) {
                 if (err) { return next(err)}
                 res.redirect(presenter.url);
             })

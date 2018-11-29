@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PresenterSchema = new Schema({
-    presenter_id: {type: String, required: true,},
     lastName: {type: String, required: true,},
     firstName: {type: String, },
     occupation: {type: String, },
