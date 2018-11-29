@@ -66,7 +66,7 @@ exports.participant_create_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render('participant_form', { title: 'New Participant', author: req.body, errors: errors.array() });
+            res.render('participant_create', { title: 'New Participant', author: req.body, errors: errors.array() });
             return;
         }
         else {
@@ -116,7 +116,7 @@ exports.participant_delete_post = function(req, res, next) {
         function(err, results) {
             if(err) {return next(err);}
             if(results.participant.length > 0) {
-                res.render('participant_delete', {participant: results.participant, });
+                res.render('participant_delete', {participant: results.participant, errors: errors.array()});
             }
             else{
                 Participant.findByIdAndRemove(req.body.participantid, function deleteParticipant(err) {
@@ -127,22 +127,54 @@ exports.participant_delete_post = function(req, res, next) {
         }
     })
 };
-//exports.participant_delete_post = function(req, res) {
-//    res.send('NOT IMPLEMENTED: delete POST');
-//};
 
 // Display update form on GET.
 exports.participant_update_get = function(req, res, next) {
     Participant.findById(req.params.id, function (err, participant){
-        
-    })
-
-}
-exports.participant_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: update GET');
+        if(err){return next(err);}
+        if(participant == null) {
+            var err = new Error('Participant not foud');
+            err.status = 404;
+            return next(err);
+        }
+        res.render('participant_create', { participant: participant});
+    });
 };
 
 // Handle update on POST.
-exports.participant_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: update POST');
-};
+exports.participant_update_post = [
+
+    body('firstName').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+        .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    body('lastName').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
+        .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
+    body('address').isLength({ min: 1 }).trim().withMessage('no address entered'),
+    body('email').isLength({ min: 1 }).trim().withMessage('no email entered'),
+
+    sanitizeBody('firstname').trim().escape(),
+    sanitizeBody('lastname').trim().escape(),
+    sanitizeBody('address').trim().escape(),
+    sanitizeBody('email').trim().escape(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        var participant = new Participant({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            address: req.body.address,
+            email: req.body.email,
+            _id: req.params.id
+        });
+    
+    if (!errors.isEmpty()) {
+        res.render('participant_create', { participant: participant, errors: errors.array()});
+        return;
+    }
+    else {
+        Participant.findByIdAndUpdate(req.params.id, participant, {}, function (err, theparticipant) {
+            if (err) {return next(err)}
+            res.redirect(theparticipant.url);
+        })
+    }
+    }
+];
