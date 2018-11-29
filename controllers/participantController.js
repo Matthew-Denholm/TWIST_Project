@@ -9,7 +9,7 @@ exports.participant_list = function(req, res, next) {
     Participant.find()
     .sort([['lastName', 'ascending']])
     .exec(function (err, list_participants) {
-        if (err) { return next(err);}
+        if (err) { return next(err)};
         res.render('participant_list', { title: 'Participants', participant_list: list_participants});
     });
 };
@@ -36,7 +36,7 @@ exports.participant_detail = function(req, res, next) {
             res.render('participant_detail', { title: 'Participant Details', participant: results.participant, participant_topic: results.participant_topic})
         }
     });
-;}
+};
 
 // Display Create form on Get
 exports.participant_create_get = function(req, res) {

@@ -2,8 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
-    sessionNum: {type: String, required: true,},
-    time: {type: Date, },
+    sessionNum: {type: Number, required: true},
+	sessionName: {type: String, required: true},
+    time: {type: String, required: true}
 });
 
 // virtual for url
@@ -13,5 +14,11 @@ SessionSchema
     return '/catalog/session/' + this._id;
 });
 
+//virtual for Description
+SessionSchema
+.virtual('Session')
+.get(function() {
+	return "Session " + this.sessionNum + ": " + this.sessionName;
+});
 //export
 module.exports = mongoose.model('Session', SessionSchema);

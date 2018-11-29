@@ -18,5 +18,10 @@ PresenterSchema
     return '/catalog/presenter/' + this._id;
 });
 
+PresenterSchema
+.virtual('name')
+.get(function() {
+	return this.lastName + ", " + this.firstName;
+});
 //export
 module.exports = mongoose.model('Presenter', PresenterSchema);

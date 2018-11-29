@@ -14,5 +14,10 @@ RoomSchema
     return '/catalog/room/' + this._id;
 });
 
+RoomSchema
+.virtual('location')
+.get(function() {
+	return "Room " + this.roomNum + ", " + this.building;
+});
 //export
 module.exports = mongoose.model('room', RoomSchema);
