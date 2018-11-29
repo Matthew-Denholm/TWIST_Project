@@ -92,9 +92,9 @@ router.get('/Session/create', Session.session_create_get);
 
 router.post('/Session/create', Session.session_create_post);
 
-router.get('/Session/delete', Session.session_delete_get);
+router.get('/Session/:id/delete', Session.session_delete_get);
 
-router.post('/Session/delete', Session.session_delete_post);
+router.post('/Session/:id/delete', Session.session_delete_post);
 
 router.get('/Session/:id/update', Session.session_update_get);
 
