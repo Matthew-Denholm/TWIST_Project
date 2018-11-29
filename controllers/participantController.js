@@ -108,11 +108,36 @@ exports.participant_delete_get = function(req, res, next) {
 };
 
 // Handle delete on POST.
-exports.participant_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: delete POST');
+exports.participant_delete_post = function(req, res, next) {
+    async.parallel({
+        participant: function(callback){
+            Participant.findById(req.body.participantid).exec(callback)
+        },
+        function(err, results) {
+            if(err) {return next(err);}
+            if(results.participant.length > 0) {
+                res.render('participant_delete', {participant: results.participant, });
+            }
+            else{
+                Participant.findByIdAndRemove(req.body.participantid, function deleteParticipant(err) {
+                    if(err) {return next(err)}
+                    res.redirect('/catalog/participants')
+                })
+            }
+        }
+    })
 };
+//exports.participant_delete_post = function(req, res) {
+//    res.send('NOT IMPLEMENTED: delete POST');
+//};
 
 // Display update form on GET.
+exports.participant_update_get = function(req, res, next) {
+    Participant.findById(req.params.id, function (err, participant){
+        
+    })
+
+}
 exports.participant_update_get = function(req, res) {
     res.send('NOT IMPLEMENTED: update GET');
 };
