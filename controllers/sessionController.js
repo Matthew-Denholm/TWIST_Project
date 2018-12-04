@@ -37,12 +37,12 @@ exports.session_create_get = function(req, res) {
 exports.session_create_post = [
 	//validate fields
 	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the sessions\' name.'),
-	body('time').isLength({min:1}).trim().withMessage('Please specify a session time.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please check Special Characters. Characters allowed are "/", hyphens (-) , colons, semicolons, and underscores.'),
+	body('time').isLength({min:1}).trim().matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
-    sanitizeBody('sessionName').trim().escape(),
-	sanitizeBody('time').trim().escape(),
+    sanitizeBody('sessionName').trim(),
+	sanitizeBody('time').trim(),
 
 	//processing request
  	function(req, res, next) {
@@ -50,7 +50,7 @@ exports.session_create_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) { //If errors exist...
             // Render form again with sanitized values/errors messages.
-            res.render('session_form', { title: 'New Session', author: req.body, errors: errors.array() }); //session form is yet to be made
+            res.render('session_create', { title: 'New Session', data: req.body, errors: errors.array() });
             return;
         }
         else {
@@ -101,19 +101,21 @@ exports.session_update_get = function(req, res) {
 		if (session==null) { // No results.
 			res.redirect('/catalog/Session/');
         }
-		res.render('session_form', { title: 'Update Session', sessionNum: session.sessionNum, sessionName: session.sessionName, time: session.time })
+
+		res.render('session_form', { title: 'Update Session', sessionNum: session.sessionNum, sessionName: session.sessionName, time: session.time, _id: session._id })
 	});
 };
 
 // Handle update on POST.
 exports.session_update_post = [
 	//validate fields
-	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isAlphanumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').isAlphanumeric().withMessage('Name cannot contain non-alphanumeric characters.'),
-
+	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please check Special Characters. Characters allowed are "/", hyphens (-) , colons, semicolons, and underscores.'),
+	body('time').isLength({min:1}).trim().matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
-    sanitizeBody('sessionName').trim().escape(),
+    sanitizeBody('sessionName').trim(),
+	sanitizeBody('time').trim(),
 
 	//processing request
  	function(req, res, next) {
@@ -121,7 +123,7 @@ exports.session_update_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) { //If errors exist...
             // Render form again with sanitized values/errors messages.
-            res.render('session_form', { title: 'Update Session', author: req.body, errors: errors.array() }); //again, session_form doesn't exist yet
+			res.render('session_form', { title: 'Update Session', sessionNum: req.body.sessionNum, sessionName: req.body.sessionName, time: req.body.time, _id: req.body._id, errors: errors.array() });
             return;
         }
         else {
@@ -133,7 +135,7 @@ exports.session_update_post = [
                     time: req.body.time,
 					 _id:req.params.id
                 });
-            session.findByIdAndUpdate(req.params.id, session, {}, function (err, thesession) {
+            Session.findByIdAndUpdate(req.params.id, session, {}, function (err) {
                 if (err) { return next(err); }
                 // Successful - redirect to details.
                 res.redirect(session.url);
