@@ -15,21 +15,17 @@ exports.session_list = function(req, res) {
 
 // Display detail page.
 exports.session_detail = function(req, res, next) {
-    async.parallel({
-        session: function(callback) {
-            Session.findById(req.params.id)
-            .exec(callback)
-        },
-        function(err, results) {
-            if (err) { return next(err);}
-            if (results.participant==null) {
-                var err = new Error('Session not found');
-                err.status = 404;
-                return next(err)
-            }
-            res.render('session_detail', { title: 'Session Details', session: results.session})
+	
+	Session.findById(req.params.id).exec(function (err, session)
+	{
+		if (err) { return next(err); }
+		if (session==null) { // No results.
+			var err = new Error('Session not found');
+			err.status = 404;
+			return next(err);
         }
-    });
+		res.render('session_detail', { title: 'Session Details', session: session})
+	});
 };
 
 // Display  create form on GET.
@@ -76,52 +72,37 @@ exports.session_create_post = [
 
 // Display delete form on GET.
 exports.session_delete_get = function(req, res, next) {
-	
-        Session.findById(req.params.id).populate('Session').exec(function(err, session) {
-			if (err) { return next(err); }
-			if (session=null) { res.redirect('/catalog/session'); }
-            res.render('session_delete', { title: 'Delete Session', session: session})
-        });
+
+    Session.findById(req.params.id).exec(function (err, session)
+	{
+		if (err) { return next(err); }
+		if (session==null) { // No results.
+			res.redirect('/catalog/Session/');
+        }
+		res.render('session_delete', { title: 'Delete Session', session: session})
+	});
 };
 
 // Handle delete on POST.
 exports.session_delete_post = function(req, res) {
 			
-	Session.findByIdAndRemove(req.body.session_id, function deleteSession(err) {
+	Session.findByIdAndRemove(req.params.id, function deleteSession(err) {
 		if (err) {return next(err); }
 		res.redirect('/catalog/session')
 	});
-   /* async.parallel({
-        session: function(callback) {
-            Session.findById(req.params.id)
-            .exec(callback)
-        },
-        function(err, results) {
-            if (err) { return next(err);}
-            if (results.session==null) {
-				Session.findByIdAndRemove(req.body.sessionid, function deleteSession(err) {
-                if (err) { return next(err); }
-                // Success - go to back to list
-                res.redirect('/catalog/session')
-				})
-            }
-        }
-    });*/
 };
 
 // Display update form on GET.
 exports.session_update_get = function(req, res) {
 	
-    Session.findById(req.params.id, function(err, results) {
-            if (err) { return next(err); }
-			console.log(results);
-            if (results==null) { // No results.
-                var err = new Error('Session not found');
-                err.status = 404;
-                return next(err);
-            }
-            res.render('session_form', { title: 'Update Session', session: results }); //does not yet exist, needs to be made to function
-        });
+    Session.findById(req.params.id).exec(function (err, session)
+	{
+		if (err) { return next(err); }
+		if (session==null) { // No results.
+			res.redirect('/catalog/Session/');
+        }
+		res.render('session_form', { title: 'Update Session', sessionNum: session.sessionNum, sessionName: session.sessionName, time: session.time })
+	});
 };
 
 // Handle update on POST.
