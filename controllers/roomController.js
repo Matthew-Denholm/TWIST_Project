@@ -3,8 +3,13 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
-exports.room_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: list');
+exports.room_list = function(req, res, next) {
+    Room.find()
+    .sort([['lastName', 'ascending']])
+    .exec(function (err, list_rooms) {
+        if (err) { return next(err)};
+        res.render('room_list', { title: 'Rooms', room_list: list_rooms});
+    });
 };
 
 // Display detail page.
@@ -13,9 +18,32 @@ exports.room_detail = function(req, res) {
 };
 
 // Display  create form on GET.
-exports.room_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: create GET');
-};
+exports.room_create_post = [
+(req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render('room_create', { title: 'New Room', author: req.body, errors: errors.array() });
+        return;
+    }
+    else {
+        // Data from form is valid.
+        // Create an Author object with escaped and trimmed data.
+        var room = new Room(
+            {
+                firstName: req.body.roomNumber,
+                lastName: req.body.building,
+                address: req.body.capacity,
+            });
+        room.save(function (err) {
+            if (err) { return next(err); }
+            // Successful - redirect to details.
+            res.redirect(room.url);
+        });
+    }
+}
+];
 
 // Handle  create on POST.
 exports.room_create_post = function(req, res) {

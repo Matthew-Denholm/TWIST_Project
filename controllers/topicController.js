@@ -3,8 +3,13 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
-exports.topic_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: list');
+exports.topic_list = function(req, res, next) {
+    Topic.find()
+    .sort([[ 'ascending']])
+    .exec(function (err, list_topics) {
+        if (err) { return next(err)};
+        res.render('topic_list', { title: 'Topics', topic_list: list_topics});
+    });
 };
 
 // Display detail page.

@@ -1,0 +1,10 @@
+<ul>
+    {{#if room_list}}
+    {{#each room_list}}
+    <li><a href="/catalog/room/{{_id}}">{{room}}</a>  <a href="/catalog/room/{{_id}}/update">Update</a>  <a href="/catalog/room/{{_id}}/delete">Delete</a></li>
+    {{/each}}
+    {{else}}
+        <h1>No rooms Available</h1>
+    {{/if}}
+</ul>
+<a href="/catalog/room/create">Create New room</a>
