@@ -82,17 +82,17 @@ exports.participant_create_post = [
 
 exports.participant_delete_get = function(req, res, next) {
 	
-    Participant.findById(req.params.id).populate('participant').exec(function(err, results) {
+    Participant.findById(req.params.id).exec(function(err, results) {
         if (err) { return next(err); }
-        if (results=null) { res.redirect('/catalog/participant'); }
+        if (results==null) { res.redirect('/catalog/participant'); }
         res.render('participant_delete', { title: 'Delete participant', participant: results})
     });
 };
 // Handle delete on POST.
 exports.participant_delete_post = function(req, res, next) {
-    Participant.findByIdAndRemove(req.body.id, function deleteParticipant(err){
-        if (err) return next(err),
-        res.redirect("/catalog/participants");
+    Participant.findByIdAndDelete(req.params.id, function deleteParticipant(err){
+        if (err) return next(err);
+        res.redirect('/catalog/participants');
     });
 };
 
@@ -101,11 +101,9 @@ exports.participant_update_get = function(req, res, next) {
     Participant.findById(req.params.id, function (err, participant){
         if(err){return next(err);}
         if(participant == null) {
-            var err = new Error('Participant not foud');
-            err.status = 404;
-            return next(err);
+            res.redirect('/catalog/Participant/')
         }
-        res.render('participant_create', { participant: participant});
+        res.render('participant_update', { title: 'Update Participation', participant: participant});
     });
 };
 
@@ -126,23 +124,22 @@ exports.participant_update_post = [
 
     (req, res, next) => {
         const errors = validationResult(req);
-        var participant = new Participant({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            address: req.body.address,
-            email: req.body.email,
-            _id: req.params.id
-        });
-    
-    if (!errors.isEmpty()) {
-        res.render('participant_create', { participant: participant, errors: errors.array()});
-        return;
-    }
-    else {
-        Participant.findByIdAndUpdate(req.params.id, participant, {}, function (err, theparticipant) {
-            if (err) {return next(err)}
-            res.redirect(theparticipant.url);
-        })
-    }
+        if (!errors.isEmpty()) {
+            res.render('participant_update', { title: 'Update Participant', _id: participant._id, participant: participant, errors: errors.array()});
+            return;
+        }
+        else {
+            var participant = new Participant({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                address: req.body.address,
+                email: req.body.email,
+                _id:req.params.id
+            });
+            Participant.findByIdAndUpdate(req.params.id, participant, {}, function (err, theparticipant) {
+                if (err) {return next(err);}
+                res.redirect(theparticipant.url);
+            });
+        }
     }
 ];

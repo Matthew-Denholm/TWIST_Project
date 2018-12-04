@@ -4,7 +4,7 @@ const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
 exports.room_list = function(req, res, next) {
-    room.find()
+    Room.find()
     .sort([['lastName', 'ascending']])
     .exec(function (err, list_rooms) {
         if (err) { return next(err)};
