@@ -79,43 +79,21 @@ exports.participant_create_post = [
 ];
 
 // Display delete form on GET.
+
 exports.participant_delete_get = function(req, res, next) {
-    async.parallel({
-        participant: function(callback) {
-            Participant.findById(req.params.id).exec(callback)
-        },
-        participant_topic: function(callback){
-            Topic.find({ 'participant': req.params.id }).exec(callback)
-        },
-    },
-        function(err, results) {
-            if (err) {return next(err)};
-            if (results.participant==null) {
-                res.redirect('catalog/participants');
-            };
-        res.render('participant_delete', { title: 'Delete Participant', participant: results.participant, participant_topic: results.participant_topic});
+	
+    Participant.findById(req.params.id).populate('participant').exec(function(err, results) {
+        if (err) { return next(err); }
+        if (results=null) { res.redirect('/catalog/participant'); }
+        res.render('participant_delete', { title: 'Delete participant', participant: results})
     });
 };
-
 // Handle delete on POST.
 exports.participant_delete_post = function(req, res, next) {
-    async.parallel({
-        participant: function(callback){
-            Participant.findById(req.body.participantid).exec(callback)
-        },
-        function(err, results) {
-            if(err) {return next(err);}
-            if(results.participant.length > 0) {
-                res.render('participant_delete', {participant: results.participant, errors: errors.array()});
-            }
-            else{
-                Participant.findByIdAndRemove(req.body.participantid, function deleteParticipant(err) {
-                    if(err) {return next(err)}
-                    res.redirect('/catalog/participants')
-                })
-            }
-        }
-    })
+    Participant.findByIdAndRemove(req.body.id, function deleteParticipant(err){
+        if (err) return next(err),
+        res.redirect("/catalog/participants");
+    });
 };
 
 // Display update form on GET.
