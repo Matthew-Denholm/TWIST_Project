@@ -15,21 +15,17 @@ exports.session_list = function(req, res) {
 
 // Display detail page.
 exports.session_detail = function(req, res, next) {
-    async.parallel({
-        session: function(callback) {
-            Session.findById(req.params.id)
-            .exec(callback)
-        },
-        function(err, results) {
-            if (err) { return next(err);}
-            if (results.participant==null) {
-                var err = new Error('Session not found');
-                err.status = 404;
-                return next(err)
-            }
-            res.render('session_detail', { title: 'Session Details', session: results.session})
+	
+	Session.findById(req.params.id).exec(function (err, session)
+	{
+		if (err) { return next(err); }
+		if (session==null) { // No results.
+			var err = new Error('Session not found');
+			err.status = 404;
+			return next(err);
         }
-    });
+		res.render('session_detail', { title: 'Session Details', session: session})
+	});
 };
 
 // Display  create form on GET.
@@ -41,12 +37,12 @@ exports.session_create_get = function(req, res) {
 exports.session_create_post = [
 	//validate fields
 	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the sessions\' name.'),
-	body('time').isLength({min:1}).trim().withMessage('Please specify a session time.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please check Special Characters. Characters allowed are "/", hyphens (-) , colons, semicolons, and underscores.'),
+	body('time').isLength({min:1}).trim().matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
-    sanitizeBody('sessionName').trim().escape(),
-	sanitizeBody('time').trim().escape(),
+    sanitizeBody('sessionName').trim(),
+	sanitizeBody('time').trim(),
 
 	//processing request
  	function(req, res, next) {
@@ -54,7 +50,7 @@ exports.session_create_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) { //If errors exist...
             // Render form again with sanitized values/errors messages.
-            res.render('session_form', { title: 'New Session', author: req.body, errors: errors.array() }); //session form is yet to be made
+            res.render('session_create', { title: 'New Session', data: req.body, errors: errors.array() });
             return;
         }
         else {
@@ -76,63 +72,50 @@ exports.session_create_post = [
 
 // Display delete form on GET.
 exports.session_delete_get = function(req, res, next) {
-	
-        Session.findById(req.params.id).populate('Session').exec(function(err, session) {
-			if (err) { return next(err); }
-			if (session=null) { res.redirect('/catalog/session'); }
-            res.render('session_delete', { title: 'Delete Session', session: session})
-        });
+
+    Session.findById(req.params.id).exec(function (err, session)
+	{
+		if (err) { return next(err); }
+		if (session==null) { // No results.
+			res.redirect('/catalog/Session/');
+        }
+		res.render('session_delete', { title: 'Delete Session', session: session})
+	});
 };
 
 // Handle delete on POST.
 exports.session_delete_post = function(req, res) {
 			
-	Session.findByIdAndRemove(req.body.session_id, function deleteSession(err) {
+	Session.findByIdAndRemove(req.params.id, function deleteSession(err) {
 		if (err) {return next(err); }
 		res.redirect('/catalog/session')
 	});
-   /* async.parallel({
-        session: function(callback) {
-            Session.findById(req.params.id)
-            .exec(callback)
-        },
-        function(err, results) {
-            if (err) { return next(err);}
-            if (results.session==null) {
-				Session.findByIdAndRemove(req.body.sessionid, function deleteSession(err) {
-                if (err) { return next(err); }
-                // Success - go to back to list
-                res.redirect('/catalog/session')
-				})
-            }
-        }
-    });*/
 };
 
 // Display update form on GET.
 exports.session_update_get = function(req, res) {
 	
-    Session.findById(req.params.id, function(err, results) {
-            if (err) { return next(err); }
-			console.log(results);
-            if (results==null) { // No results.
-                var err = new Error('Session not found');
-                err.status = 404;
-                return next(err);
-            }
-            res.render('session_form', { title: 'Update Session', session: results }); //does not yet exist, needs to be made to function
-        });
+    Session.findById(req.params.id).exec(function (err, session)
+	{
+		if (err) { return next(err); }
+		if (session==null) { // No results.
+			res.redirect('/catalog/Session/');
+        }
+
+		res.render('session_form', { title: 'Update Session', sessionNum: session.sessionNum, sessionName: session.sessionName, time: session.time, _id: session._id })
+	});
 };
 
 // Handle update on POST.
 exports.session_update_post = [
 	//validate fields
-	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isAlphanumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').isAlphanumeric().withMessage('Name cannot contain non-alphanumeric characters.'),
-
+	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
+	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please check Special Characters. Characters allowed are "/", hyphens (-) , colons, semicolons, and underscores.'),
+	body('time').isLength({min:1}).trim().matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
-    sanitizeBody('sessionName').trim().escape(),
+    sanitizeBody('sessionName').trim(),
+	sanitizeBody('time').trim(),
 
 	//processing request
  	function(req, res, next) {
@@ -140,7 +123,7 @@ exports.session_update_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) { //If errors exist...
             // Render form again with sanitized values/errors messages.
-            res.render('session_form', { title: 'Update Session', author: req.body, errors: errors.array() }); //again, session_form doesn't exist yet
+			res.render('session_form', { title: 'Update Session', sessionNum: req.body.sessionNum, sessionName: req.body.sessionName, time: req.body.time, _id: req.body._id, errors: errors.array() });
             return;
         }
         else {
@@ -152,7 +135,7 @@ exports.session_update_post = [
                     time: req.body.time,
 					 _id:req.params.id
                 });
-            session.findByIdAndUpdate(req.params.id, session, {}, function (err, thesession) {
+            Session.findByIdAndUpdate(req.params.id, session, {}, function (err) {
                 if (err) { return next(err); }
                 // Successful - redirect to details.
                 res.redirect(session.url);

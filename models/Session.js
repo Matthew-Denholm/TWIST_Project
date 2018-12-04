@@ -20,5 +20,11 @@ SessionSchema
 .get(function() {
 	return "Session " + this.sessionNum + ": " + this.sessionName;
 });
+
+//virtual for details
+SessionSchema.virtual('SDetails')
+.get(function() {
+	return "Session Number : " + this.sessionNum + "/n /nSession Name : " + this.sessionName + "/n /nTime : " + this.time;
+})
 //export
 module.exports = mongoose.model('Session', SessionSchema);
