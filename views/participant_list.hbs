@@ -1,7 +1,7 @@
 <ul>
     {{#if participant_list}}
     {{#each participant_list}}
-    <li><a href="/catalog/participant?id={{id}}">{{name}}</a>  <a href="/catalog/participant/update?id={{_id}}">Update</a>  <a href="/catalog/participant/delete?id={{_id}}">Delete</a></li>
+    <li><a href="{{url}}">{{name}}</a>  <a href="/catalog/participant/{{_id}}/update/">Update</a>  <a href="/catalog/participant/{{_id}}/delete/">Delete</a></li>
     {{/each}}
     {{else}}
         <h1>No participants</h1>

@@ -1,8 +1,7 @@
-<h1>Participant Details:</h1>
-<p>First Name: {{participant.firstName}}</p>
+<p>First Name: {{participants.firstName}}</p>
 <p>Last Name: {{participant.lastName}}</p>
-<p>Address: {{participant.address}}</p>
-<p>Email: {{participant.email}}</p>
+<p>Address: {{address}}</p>
+<p>Email: {{email}}</p>
 
-<a href="/catalog/participants/delete">Delete Current Participant</a>
-<a href="/catalog/participants/update">Update Current Participant Details</a>
+<a href="/catalog/participant/{{_id}}/delete">Delete Current Participant</a>
+<a href="/catalog/participant/{{_id}}/update">Update Current Participant Details</a>

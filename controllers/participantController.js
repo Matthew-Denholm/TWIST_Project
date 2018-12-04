@@ -15,26 +15,16 @@ exports.participant_list = function(req, res, next) {
 };
 
 // Display details
-exports.participant_detail = function(req, res, next) {
-    async.parallel({
-        participant: function(callback) {
-            Participant.findById(req.params.id)
-            .exec(callback)
-        },
-        //display participants topics
-        participant_topic: function(callback) {
-            Topic.find({ 'participant': req.params.id}, 'topic summary')
-            .exec(callback)
-        },
-        function(err, results) {
-            if (err) { return next(err);}
-            if (results.participant==null) {
+exports.participant_detail = function(req,res,next) {
+    Participant.findById(req.params.id)
+    .exec(function (err, results) {
+        if (err) { return next(err);}
+            if (results==null) {
                 var err = new Error('Participant not found');
                 err.status = 404;
                 return next(err)
-            }
-            res.render('participant_detail', { title: 'Participant Details', participant: results.participant, participant_topic: results.participant_topic})
         }
+        res.render('participant_detail', { title: "Participant Details", participant: results.participant,})
     });
 };
 
