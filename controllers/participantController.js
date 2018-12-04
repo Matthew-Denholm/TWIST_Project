@@ -24,7 +24,7 @@ exports.participant_detail = function(req,res,next) {
                 err.status = 404;
                 return next(err)
         }
-        res.render('participant_detail', { title: "Participant Details", participant: results.participant,})
+        res.render('participant_detail', { title: "Participant Details", participant: results,})
     });
 };
 
