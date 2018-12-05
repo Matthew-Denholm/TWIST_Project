@@ -5,3 +5,6 @@ Nicholas Crombie-<br> initiated express/node/mongoose packets, models built. I s
 
 11.26.18
 Matthew Denholm-<br> Session controller should have basic CRUD functionality. Views need to be hooked up still to confirm this.
+
+12.04.18
+Matthew Denholm-<br> Session and Participant are fully functional on CRUD. Can be prettied up later.
