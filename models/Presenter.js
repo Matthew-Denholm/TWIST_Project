@@ -12,15 +12,17 @@ var PresenterSchema = new Schema({
 
 // virtual for url
 PresenterSchema
-.virtual('url')
-.get(function() {
-    return '/catalog/presenter/' + this._id;
-});
-
-PresenterSchema
 .virtual('name')
 .get(function() {
 	return this.lastName + ", " + this.firstName;
 });
+
+PresenterSchema
+.virtual('url')
+.get(function() {
+    return '/catalog/Presenter/' + this._id;
+});
+
+
 //export
 module.exports = mongoose.model('Presenter', PresenterSchema);
