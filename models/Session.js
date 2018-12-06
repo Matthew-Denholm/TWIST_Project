@@ -3,7 +3,6 @@ var Schema = mongoose.Schema;
 
 var SessionSchema = new Schema({
     sessionNum: {type: Number, required: true},
-	sessionName: {type: String, required: true}, //enum: ['Accounting/Finance', 'Attorney', 'City Government', 'Communications and Marketing', 'Food Science', 'Graphic Designer', 'Highway Patrol', 'Pediatric Care', 'Pharmacy', 'Pilot', 'Speech Pathology', 'Social Work/Mental Health', 'Zoo Veterinary Medicine'], default: 'Attorney'},
     time: {type: String, required: true}
 });
 
@@ -18,13 +17,8 @@ SessionSchema
 SessionSchema
 .virtual('Session')
 .get(function() {
-	return "Session " + this.sessionNum + ": " + this.sessionName;
+	return "Session " + this.sessionNum + ": " + this.time;
 });
 
-//virtual for details
-SessionSchema.virtual('SDetails')
-.get(function() {
-	return "Session Number : " + this.sessionNum + "/n /nSession Name : " + this.sessionName + "/n /nTime : " + this.time;
-})
 //export
 module.exports = mongoose.model('Session', SessionSchema);
