@@ -13,5 +13,12 @@ SchoolSchema
     return '/catalog/school/' + this._id;
 });
 
+//virtual for Description
+SchoolSchema
+.virtual('School')
+.get(function() {
+	return "USD " + this.hs_id + ": " + this.hsName;
+});
+
 //export
 module.exports = mongoose.model('School', SchoolSchema);
