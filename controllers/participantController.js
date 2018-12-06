@@ -56,7 +56,7 @@ exports.participant_create_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render('participant_create', { title: 'New Participant', author: req.body, errors: errors.array() });
+            res.render('participant_create', { title: 'New Participant', errors: errors.array() });
             return;
         }
         else {
@@ -103,7 +103,14 @@ exports.participant_update_get = function(req, res, next) {
         if(participant == null) {
             res.redirect('/catalog/Participant/')
         }
-        res.render('participant_update', { title: 'Update Participation', participant: participant});
+        res.render('participant_update', { 
+            title: 'Update Participation',
+            participant: participant, 
+            firstName: participant.firstName, 
+            lastName: participant.lastName, 
+            address: participant.address, 
+            email: participant.email,
+        });
     });
 };
 
@@ -125,7 +132,11 @@ exports.participant_update_post = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.render('participant_update', { title: 'Update Participant', _id: participant._id, participant: participant, errors: errors.array()});
+            res.render('participant_update', { 
+                title: 'Update Participant', 
+                _id: participant._id, 
+                participant: participant, 
+                errors: errors.array()});
             return;
         }
         else {

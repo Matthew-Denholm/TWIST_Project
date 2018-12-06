@@ -8,13 +8,19 @@
     </div>
 </div>
 <form action="/catalog/Presenter/{{presenter._id}}/update" method="POST">
+	<input name="_id" type="hidden" id="_id" value={{_id}}>
 	<label for="firtName">First Name:</label><br>
-	<input name="firstName" type="text" id="first name"><br><br>
+	<input name="firstName" type="text" id="firstName" value="{{presenter.firstName}}"><br><br>
 	<label for="last name">Last Name:</label><br>
-	<input name="lastName" type="text" id="last name"><br><br>
+	<input name="lastName" type="text" id="lastName" value="{{lastName}}"><br><br>
 	<label for="mainPhone">Phone:</label><br>
-	<input name="mainPhone" type="text" id="mainPhone"><br><br>
+	<input name="mainPhone" type="text" id="mainPhone" value="{{mainPhone}}"><br><br>
 	<label for="email">Email:</label><br>
-	<input name="email" type="text" id="email"><br><br>
+	<input name="email" type="text" id="email" value="{{email}}"><br><br>
 	<input type="submit" value="Add presenter"><br>
 </form>
+	{{#if errors}}
+    {{#each errors}}
+	<p>{{this.msg}}</p>
+	{{/each}}
+	{{/if}}

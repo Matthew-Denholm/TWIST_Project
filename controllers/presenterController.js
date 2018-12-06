@@ -100,7 +100,14 @@ exports.presenter_update_get = function(req, res, next) {
         if(presenter == null) {
             res.redirect('/catalog/presenters/')
         }
-        res.render('presenter_update', { title: 'Update Participation', presenter: presenter});
+        res.render('presenter_update', { 
+            title: 'Update Participation', 
+            presenter: presenter,
+            firstName: presenter.firstName,
+            lastName: presenter.lastName,
+            mainPhone: presenter.mainPhone,
+            email: presenter.email,
+        });
     });
 };
 
@@ -122,14 +129,18 @@ exports.presenter_update_post = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.render('presenter_update', { title: 'Update presenter', _id: presenter._id, presenter: presenter, errors: errors.array()});
+            res.render('presenter_update', { 
+                title: 'Update presenter', 
+                _id: presenter._id, 
+                presenter: presenter, 
+                errors: errors.array()});
             return;
         }
         else {
             var presenter = new Presenter({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
-                address: req.body.address,
+                mainPhone: req.body.mainPhone,
                 email: req.body.email,
                 _id:req.params.id
             });
