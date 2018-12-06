@@ -37,11 +37,9 @@ exports.session_create_get = function(req, res) {
 exports.session_create_post = [
 	//validate fields
 	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please check Special Characters. Characters allowed are "/", hyphens (-) , colons, semicolons, and underscores.'),
 	body('time').isLength({min:1}).trim().matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
-    sanitizeBody('sessionName').trim(),
 	sanitizeBody('time').trim(),
 
 	//processing request
@@ -58,7 +56,6 @@ exports.session_create_post = [
             var session = new Session(
                 {
                     sessionNum: req.body.sessionNum,
-                    sessionName: req.body.sessionName,
                     time: req.body.time
                 });
             session.save(function (err) {
@@ -102,7 +99,7 @@ exports.session_update_get = function(req, res) {
 			res.redirect('/catalog/Session/');
         }
 
-		res.render('session_form', { title: 'Update Session', sessionNum: session.sessionNum, sessionName: session.sessionName, time: session.time, _id: session._id })
+		res.render('session_form', { title: 'Update Session', sessionNum: session.sessionNum, time: session.time, _id: session._id })
 	});
 };
 
@@ -110,11 +107,9 @@ exports.session_update_get = function(req, res) {
 exports.session_update_post = [
 	//validate fields
 	body('sessionNum').isLength({ min: 1 }).trim().withMessage('An ID is required.').isNumeric().withMessage('ID cannot contain non-alphanumeric characters.'),
-	body('sessionName').isLength({min:1}).trim().withMessage('Please specify the name of the session. Identical Names are allowed.').matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please check Special Characters. Characters allowed are "/", hyphens (-) , colons, semicolons, and underscores.'),
 	body('time').isLength({min:1}).trim().matches(/^[a-z\d\-_\/\:\;\s]+$/i).withMessage('Please specify a session time.'),
 	//sanitize
 	sanitizeBody('sessionNum').trim().escape(),
-    sanitizeBody('sessionName').trim(),
 	sanitizeBody('time').trim(),
 
 	//processing request
@@ -123,7 +118,7 @@ exports.session_update_post = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) { //If errors exist...
             // Render form again with sanitized values/errors messages.
-			res.render('session_form', { title: 'Update Session', sessionNum: req.body.sessionNum, sessionName: req.body.sessionName, time: req.body.time, _id: req.body._id, errors: errors.array() });
+			res.render('session_form', { title: 'Update Session', sessionNum: req.body.sessionNum, time: req.body.time, _id: req.body._id, errors: errors.array() });
             return;
         }
         else {
@@ -131,9 +126,8 @@ exports.session_update_post = [
             var session = new Session(
                 {
                     sessionNum: req.body.sessionNum,
-                    sessionName: req.body.sessionName,
                     time: req.body.time,
-					 _id:req.params.id
+					 _id: req.params.id
                 });
             Session.findByIdAndUpdate(req.params.id, session, {}, function (err) {
                 if (err) { return next(err); }
