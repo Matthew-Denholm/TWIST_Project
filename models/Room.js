@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var RoomSchema = new Schema({
-    roomNum: {type: String, required: true,},
-    building: {type: String, },
+    roomNum: {type: String, required: true },
+    building: {type: String, required: true },
     capacity: {type: String, },
 });
 
@@ -15,9 +15,9 @@ RoomSchema
 });
 
 RoomSchema
-.virtual('location')
+.virtual('Location')
 .get(function() {
-	return "Room " + this.roomNum + ", " + this.building;
+	return "Room " + this.roomNum + ": " + this.building;
 });
 //export
-module.exports = mongoose.model('room', RoomSchema);
+module.exports = mongoose.model('Room', RoomSchema);
