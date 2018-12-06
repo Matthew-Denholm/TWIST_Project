@@ -9,15 +9,15 @@ var TopicSchema = new Schema({
 
 // virtual for url
 TopicSchema
-.virtual('url')
-.get(function() {
-    return '/catalog/topic/' + this._id;
-});
-
-TopicSchema
 .virtual('topic')
 .get(function() {
 	return this.title + ': ' + this.description;
+});
+
+TopicSchema
+.virtual('url')
+.get(function() {
+    return '/catalog/Topic/' + this._id;
 });
 //export
 module.exports = mongoose.model('Topic', TopicSchema);
