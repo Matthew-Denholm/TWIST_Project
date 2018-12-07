@@ -6,7 +6,7 @@ const { sanitizeBody } = require('express-validator/filter');
 // Display list.
 exports.presenter_list = function(req, res, next) {
     Presenter.find()
-    .sort([['lastname', 'ascending']])
+    .sort([['lastName', 'ascending']])
     .exec(function (err, list_presenters) {
         if (err) {return next(err)};
         res.render('presenter_list', {title: 'Presenters', presenter_list: list_presenters});
@@ -45,12 +45,16 @@ exports.presenter_create_post = [
         .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
     body('lastName').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
+    body('occupation').trim(),
     body('mainPhone').isLength({ min: 1 }).trim().withMessage('no phone number entered'),
+    body('mobilePhone').trim(),
     body('email').isLength({ min: 1 }).trim().withMessage('no email entered'),
 
     sanitizeBody('firstname').trim().escape(),
     sanitizeBody('lastname').trim().escape(),
+    sanitizeBody('occupation').trim(),
     sanitizeBody('mainPhone').trim().escape(),
+    sanitizeBody('mobilePhone').trim(),
     sanitizeBody('email').trim().escape(),
 
     (req, res, next) => {
@@ -66,7 +70,9 @@ exports.presenter_create_post = [
             var presenter = new Presenter({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
+                occupation: req.body.occupation,
                 mainPhone: req.body.mainPhone,
+                mobilePhone: req.body.mobilePhone,
                 email: req.body.email
             });
             presenter.save(function (err) {
@@ -101,12 +107,14 @@ exports.presenter_update_get = function(req, res, next) {
             res.redirect('/catalog/presenters/')
         }
         res.render('presenter_update', { 
-            title: 'Update Participation', 
-            presenter: presenter,
-            firstName: presenter.firstName,
-            lastName: presenter.lastName,
-            mainPhone: presenter.mainPhone,
-            email: presenter.email,
+            title: 'Update Presenter',
+            presenter: presenter, 
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            occupation: req.body.occupation,
+            mainPhone: req.body.mainPhone,
+            mobilePhone: req.body.mobilePhone,
+            email: req.body.email
         });
     });
 };
@@ -118,12 +126,16 @@ exports.presenter_update_post = [
         .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
     body('lastName').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
+    body('occupation').trim(),
     body('mainPhone').isLength({ min: 1 }).trim().withMessage('no phone number entered'),
+    body('mobilePhone').trim(),
     body('email').isLength({ min: 1 }).trim().withMessage('no email entered'),
 
-    sanitizeBody('firstName').trim().escape(),
-    sanitizeBody('lastName').trim().escape(),
+    sanitizeBody('firstname').trim().escape(),
+    sanitizeBody('lastname').trim().escape(),
+    sanitizeBody('occupation').trim(),
     sanitizeBody('mainPhone').trim().escape(),
+    sanitizeBody('mobilePhone').trim(),
     sanitizeBody('email').trim().escape(),
 
     (req, res, next) => {
@@ -140,7 +152,9 @@ exports.presenter_update_post = [
             var presenter = new Presenter({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
+                occupation: req.body.occupation,
                 mainPhone: req.body.mainPhone,
+                mobilePhone: req.body.mobilePhone,
                 email: req.body.email,
                 _id:req.params.id
             });
