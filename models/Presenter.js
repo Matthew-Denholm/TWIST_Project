@@ -5,6 +5,7 @@ var PresenterSchema = new Schema({
     lastName: {type: String, required: true,},
     firstName: {type: String, },
     occupation: {type: String, },
+    topic: [{type: Schema.Types.ObjectId, ref: 'Topic'}],
     mainPhone: {type: String, },
     mobilePhone: {type: String, },
     email: {type: String, },

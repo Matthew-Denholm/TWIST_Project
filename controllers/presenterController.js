@@ -1,4 +1,5 @@
 var Presenter = require('../models/Presenter');
+var Topic = require('../models/Topic');
 var async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -16,6 +17,7 @@ exports.presenter_list = function(req, res, next) {
 // Display detail page.
 exports.presenter_detail = function(req, res, next) {
     Presenter.findById(req.params.id)
+    .populate('topic')
     .exec(function(err, results){
         if (err) {return next(err);}
             if (results==null){
@@ -34,7 +36,9 @@ exports.presenter_detail = function(req, res, next) {
 // Display  create form on GET.
 exports.presenter_create_get = function(req, res) {
     res.render('presenter_create', {
-        title: 'New Presenter'
+        title: 'New Presenter',
+        presenter: results.presenter,
+        topic: results.topic
     });
 };
 
@@ -46,6 +50,7 @@ exports.presenter_create_post = [
     body('lastName').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
     body('occupation').trim(),
+    body('topic').trim(),
     body('mainPhone').isLength({ min: 1 }).trim().withMessage('no phone number entered'),
     body('mobilePhone').trim(),
     body('email').isLength({ min: 1 }).trim().withMessage('no email entered'),
@@ -53,6 +58,7 @@ exports.presenter_create_post = [
     sanitizeBody('firstname').trim().escape(),
     sanitizeBody('lastname').trim().escape(),
     sanitizeBody('occupation').trim(),
+    sanitizeBody('topic').trim(),
     sanitizeBody('mainPhone').trim().escape(),
     sanitizeBody('mobilePhone').trim(),
     sanitizeBody('email').trim().escape(),
@@ -71,6 +77,7 @@ exports.presenter_create_post = [
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 occupation: req.body.occupation,
+                topic: req.body.topic,
                 mainPhone: req.body.mainPhone,
                 mobilePhone: req.body.mobilePhone,
                 email: req.body.email
@@ -112,6 +119,7 @@ exports.presenter_update_get = function(req, res, next) {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             occupation: req.body.occupation,
+            topic: req.body.topic,
             mainPhone: req.body.mainPhone,
             mobilePhone: req.body.mobilePhone,
             email: req.body.email
@@ -153,6 +161,7 @@ exports.presenter_update_post = [
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 occupation: req.body.occupation,
+                topic: req.body.topic,
                 mainPhone: req.body.mainPhone,
                 mobilePhone: req.body.mobilePhone,
                 email: req.body.email,
