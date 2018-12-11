@@ -37,8 +37,6 @@ exports.presenter_detail = function(req, res, next) {
 exports.presenter_create_get = function(req, res) {
     res.render('presenter_create', {
         title: 'New Presenter',
-        presenter: results.presenter,
-        topic: results.topic
     });
 };
 
@@ -82,6 +80,11 @@ exports.presenter_create_post = [
                 mobilePhone: req.body.mobilePhone,
                 email: req.body.email
             });
+            for (let i = 0; i < results.topic.length; i++) {
+                if (presenter.topic.indexOf(results.topic[i]._id) > -1) {
+                    results.topic[i].checked='true';
+                }
+            }
             presenter.save(function (err) {
                 if (err) { return next(err)}
                 res.redirect(presenter.url);
@@ -113,6 +116,13 @@ exports.presenter_update_get = function(req, res, next) {
         if(presenter == null) {
             res.redirect('/catalog/presenters/')
         }
+        /*for (var allTopics = 0; allTopics < results.topics.length; allTopics++) {
+            for (var allPreseenters = 0; allPreseenters < results.presenter.topic.length; allPreseenters++) {
+                if (results.topics[allTopics]._id.toString()==results.presenter.topic[allPreseenters]._id.toString()) {
+                    results.topics[allTopics].checked='true';
+                }
+            }
+        }*/
         res.render('presenter_update', { 
             title: 'Update Presenter',
             presenter: presenter, 
@@ -129,6 +139,15 @@ exports.presenter_update_get = function(req, res, next) {
 
 // Handle update on POST.
 exports.presenter_update_post = [
+    (req, res, next) => {
+        if(!(req.body.topic instanceof Array)){
+            if(typeof req.body.topic==='undefined')
+            req.body.topic=[];
+            else
+            req.body.topic=new Array(req.body.topic);
+        }
+        next();
+    },
 
     body('firstName').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
         .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
@@ -161,7 +180,7 @@ exports.presenter_update_post = [
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 occupation: req.body.occupation,
-                topic: req.body.topic,
+                topic: (typeof req.body.topic==='undefined') ? [] : req.body.topic,
                 mainPhone: req.body.mainPhone,
                 mobilePhone: req.body.mobilePhone,
                 email: req.body.email,
