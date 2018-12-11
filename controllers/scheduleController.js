@@ -4,7 +4,11 @@ const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
 exports.schedule_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: list');
+    res.render('schedule', {
+        title: 'Twist Schedule',
+        //topic: topic,
+        //presenter: presenter
+    });
 };
 
 // Display detail page.
