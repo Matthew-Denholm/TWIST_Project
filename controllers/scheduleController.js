@@ -14,7 +14,9 @@ exports.schedule_list = function(req, res) {
     .sort([['Capacity', 'ascending']])
     .exec(function (err, list_sessions) {
         if (err) { return next(err);}
-        res.render('schedule', { title: 'Current Schedule', schedule_list: list_sessions});
+        res.render('schedule', { title: 'Twist Schedule', schedule_list: list_sessions});
+        //topic: topic,
+        //presenter: presenter
     });
 };
 

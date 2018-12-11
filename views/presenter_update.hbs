@@ -8,16 +8,20 @@
     </div>
 </div>
 <form action="/catalog/Presenter/{{presenter._id}}/update" method="POST">
-	<input name="_id" type="hidden" id="_id" value={{_id}}>
+	<input name="_id" type="hidden" id="_id" value={{presenter._id}}>
 	<label for="firtName">First Name:</label><br>
 	<input name="firstName" type="text" id="firstName" value="{{presenter.firstName}}"><br><br>
 	<label for="last name">Last Name:</label><br>
-	<input name="lastName" type="text" id="lastName" value="{{lastName}}"><br><br>
+	<input name="lastName" type="text" id="lastName" value="{{presenter.lastName}}"><br><br>
+	<label for="occupation">Occupation:</label><br>
+	<input name="occupation" type="text" id="occupation" value="{{presenter.occupation}}"><br><br>
 	<label for="mainPhone">Phone:</label><br>
-	<input name="mainPhone" type="text" id="mainPhone" value="{{mainPhone}}"><br><br>
+	<input name="mainPhone" type="text" id="mainPhone" value="{{presenter.mainPhone}}"><br><br>
+	<label for="mobilePhone">Mobile:</label><br>
+	<input name="mobilePhone" type="text" id="mobilePhone" value="{{presenter.mobilePhone}}"><br><br>
 	<label for="email">Email:</label><br>
-	<input name="email" type="text" id="email" value="{{email}}"><br><br>
-	<input type="submit" value="Add presenter"><br>
+	<input name="email" type="text" id="email" value="{{presenter.email}}"><br><br>
+	<input type="submit" value="update presenter"><br>
 </form>
 	{{#if errors}}
     {{#each errors}}
