@@ -1,10 +1,21 @@
-var Schedule = require('../models/schedule');
+var Schedule = require('../models/Schedule');
+var async = require('async');
+var Topic = require('../models/Topic');
+var Session = require('../models/Session');
+var Room = require('../models/Room');
+var Presenter = require('../models/Presenter');
+
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 // Display list.
 exports.schedule_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: list');
+	Schedule.find()
+    .sort([['Capacity', 'ascending']])
+    .exec(function (err, list_sessions) {
+        if (err) { return next(err);}
+        res.render('schedule', { title: 'Current Schedule', schedule_list: list_sessions});
+    });
 };
 
 // Display detail page.
