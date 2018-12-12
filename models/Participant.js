@@ -7,7 +7,9 @@ var ParticipantSchema = new Schema({
     address: {type: String},
     email: {type: String},
     timeStamp: {type: Date, default: Date.now, },
-    participantType: {type: String}
+    participantType: {type: String},
+	school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
+	interests: {type: Schema.Types.ObjectId, ref: 'Topic', required: true}
   });
 
 // Virtual for participants full name

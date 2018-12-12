@@ -4,6 +4,7 @@ var Topic = require('../models/Topic');
 var Session = require('../models/Session');
 var Room = require('../models/Room');
 var Presenter = require('../models/Presenter');
+var Participant = require('../models/Participant');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -29,7 +30,7 @@ exports.index = function(req, res) {
     });
 };
 
-// Display list.
+// Display table with list of data
 exports.schedule_list = function(req, res) {
 	
 	async.parallel({
@@ -39,10 +40,19 @@ exports.schedule_list = function(req, res) {
 		room: function(callback) {
 			Room.find({}, 'roomNum').exec(callback);
 		},
+		topic: function(callback) {
+			Topic.find({}, 'title').exec(callback);
+		},
+		presenter: function(callback) {
+			Presenter.find({}, 'firstName lastName').exec(callback);
+		},
+		students: function(callback) {
+			Participant.find({}, 'firstName lastName').exec(callback);
+		}
 	}, function (err, results) {
 		if (err) { return next(err);}
 		console.log(results);
-		res.render('schedule_list', { title: 'Schedule', error: err, sessions: results.session, rooms: results.room })
+		res.render('schedule_list', { title: 'Schedule', error: err, sessions: results.session, rooms: results.room, topics: results.topic, presenters: results.presenter, students: results.students })
 	})
 };
 
