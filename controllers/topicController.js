@@ -36,11 +36,11 @@ exports.topic_create_get = function(req, res) {
 exports.topic_create_post = [
     body('topicCode').isLength({ min: 1}).trim(),
 	body('title').isLength({ min: 1 }).trim().withMessage('A Title is required.'),
-	body('description').isLength({min:1}).trim().withMessage('Please describe the topic'),
+	//body('description').isLength({min:1}).trim().withMessage('Please describe the topic'),
 
     sanitizeBody('topicCode').trim(),
 	sanitizeBody('title').trim(),
-    sanitizeBody('description').trim(),
+    //sanitizeBody('description').trim(),
  	function(req, res, next) {
 
         const errors = validationResult(req);

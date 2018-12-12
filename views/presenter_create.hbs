@@ -1,3 +1,4 @@
+<body>
 <div class="container-fluid">
     <p>TWIST, or Teen Women in Science and Technology, is a one-day conference to expose teen women across the state to various career possibilities.
             TWIST was developed by K-State Polytechnic and the Salina community more than 25 years ago. </p>
@@ -15,6 +16,9 @@
 	<label for="occupation">Occupation:</label><br>
 	<input name="occupation" type="text" id="occupation"><br><br>
 	<label for="topic">Topics:</label><br>
+	{{#each topic_list}}
+	<input name="{{topic}}" type="checkbox" id="topic"><br><br>
+	{{/each}}
 	<input name="topic" type="checkbox" id="topic" value="topic.id"><br><br>
 	<label for="mainPhone">Phone:</label><br>
 	<input name="mainPhone" type="text" id="mainPhone"><br><br>
@@ -24,3 +28,4 @@
 	<input name="email" type="text" id="email"><br><br>
 	<input type="submit" value="Add presenter"><br>
 </form>
+</body>
