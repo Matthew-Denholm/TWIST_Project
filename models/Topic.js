@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var TopicSchema = new Schema({
     topicCode: {type: String, required: true,},
     title: {type: String, },
-    description: {type: String, max: 100},
+    description: {type: String, max: 100, default: 'asdf'},
 });
 
 // virtual for url
