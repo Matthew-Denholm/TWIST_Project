@@ -8,7 +8,7 @@ var Schedule = require('../controllers/scheduleController');
 var Session = require('../controllers/sessionController');
 var Topic = require('../controllers/topicController');
 
-router.get('/', Participant.participant_list); //landing page
+router.get('/', Schedule.index); //landing page
 
 //Participant Routes
 ///////////////////////////////////////////////

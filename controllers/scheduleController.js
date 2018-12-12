@@ -8,21 +8,75 @@ var Presenter = require('../models/Presenter');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
+exports.index = function(req, res) {   
+    
+	//This goes through each Model in the database and counts the number of objects associated with each model.
+    async.parallel({
+        Session_count: function(callback) {
+            Session.countDocuments({}, callback);
+        },
+        Topic_count: function(callback) {
+            Topic.countDocuments({}, callback);
+        },
+        Room_count: function(callback) {
+            Room.countDocuments({}, callback);
+        },
+        Presenter_count: function(callback) {
+            Presenter.countDocuments({}, callback);
+        },
+    }, function(err, results) {
+        res.render('schedule', { title: 'Twist Schedule', error: err, data: results });
+    });
+};
+
 // Display list.
-exports.schedule_list = function(req, res) {
-	Schedule.find()
-    .sort([['Capacity', 'ascending']])
-    .exec(function (err, list_sessions) {
-        if (err) { return next(err);}
-        res.render('schedule', { title: 'Twist Schedule', schedule_list: list_sessions});
-        //topic: topic,
-        //presenter: presenter
+exports.schedule_list = function(req, res, next) {
+	Topic.find({}, 'topicCode') // This part throws an error, but the idea here is to grab all the objects from the Topic model and display them on the list page.
+	//Here there would also be similar functions for the other models to. All the data would therefore be displayed on a table.
+    .populate('topicCode')
+    .exec(function (err, list_topics) {
+      if (err) { return next(err); }
+      //Successful, so render
+	  console.log(list_topics);
+      res.render('schedule_list', { title: 'Topic List', schedule_list: list_topics });
     });
 };
 
 // Display detail page.
 exports.schedule_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: detail: ' + req.params.id);
+    async.parallel(
+	{
+		schedule: function(callback) {
+			Schedule.findById(req.params.id)
+			.populate('sessionNum')
+			.populate('topicCode')
+			.populate('presenter_id')
+			.populate('roomNum').exec(callback);
+        },
+		session: function(callback) {
+			Schedule.find({ 'sessionNum': req.params.id }).exec(callback);
+		},
+		topic: function(callback) {
+			Schedule.find({'topicCode': req.params.id}).exec(callback);
+		},
+		presenter: function(callback) {
+			Schedule.find({'presenter_id': req.params.id}).exec(callback);
+		},
+		room: function(callback) {
+			Schedule.find({'roomNum': req.params.id}).exec(callback);
+		},
+	}), function(err, results) {
+		if (err) { return next(err); }
+		if (results.schedule==null) { // No results.
+            var err = new Error('Schedule not found');
+            err.status = 404;
+            return next(err);
+        }
+        res.render('schedule_list', { title: 'Twist Schedule'})//, session: results.session, topic: results.topic, presenter: results.presenter, room: results.room});
+	
+        //topic: topic,
+        //presenter: presenter
+	};
 };
 
 // Display  create form on GET.
