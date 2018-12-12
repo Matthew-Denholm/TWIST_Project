@@ -1,5 +1,6 @@
 var Participant = require('../models/Participant');
 var Topic = require('../models/Topic');
+var School = require('../models/School');
 var async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -24,13 +25,25 @@ exports.participant_detail = function(req,res,next) {
                 err.status = 404;
                 return next(err)
         }
+			console.log(results);
         res.render('participant_detail', { title: "Participant Details", participant: results,})
     });
 };
 
 // Display Create form on Get
 exports.participant_create_get = function(req, res) {
-    res.render('participant_create', { title: 'New Participant'});
+	async.parallel({
+		topic: function(callback) {
+			Topic.find({},'title').exec(callback);
+		},
+		school: function(callback) {
+			School.find({}, 'hsName').exec(callback);
+		},
+	},  function (err, results) {
+		if (err) { return next(err);}
+		console.log(results);
+    res.render('participant_create', { title: 'New Participant', schools: results.school, interests: results.topic});
+	})
 };
 
 // handle Create on Post 
@@ -67,7 +80,9 @@ exports.participant_create_post = [
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     address: req.body.address,
-                    email: req.body.email
+                    email: req.body.email,
+					school: req.body.school,
+					interests: req.body.interests
                 });
             participant.save(function (err) {
                 if (err) { return next(err); }
@@ -98,20 +113,28 @@ exports.participant_delete_post = function(req, res, next) {
 
 // Display update form on GET.
 exports.participant_update_get = function(req, res, next) {
-    Participant.findById(req.params.id, function (err, participant){
-        if(err){return next(err);}
-        if(participant == null) {
-            res.redirect('/catalog/Participant/')
-        }
-        res.render('participant_update', { 
-            title: 'Update Participation',
-            participant: participant, 
-            firstName: participant.firstName, 
-            lastName: participant.lastName, 
-            address: participant.address, 
-            email: participant.email,
-        });
-    });
+	
+	async.parallel({
+		participant: function(callback){
+			Participant.findById(req.params.id).exec(callback);
+		},
+		topic: function(callback) {
+			Topic.find({},'title').exec(callback);
+		},
+		school: function(callback) {
+			School.find({}, 'hsName').exec(callback);
+		},
+	},  function (err, results) {
+		if (err) { return next(err)
+		res.redirect('/catalog/Participant/'); }
+		console.log(results);	            
+	    res.render('participant_update', { 
+	            title: 'Update Participation',
+	            participant: results.participant,
+				interests: results.topic,
+				schools: results.school
+		})
+    })
 };
 
 // Handle update on POST.
@@ -145,6 +168,8 @@ exports.participant_update_post = [
                 lastName: req.body.lastName,
                 address: req.body.address,
                 email: req.body.email,
+				school: req.body.school,
+				interests: req.body.interests,
                 _id:req.params.id
             });
             Participant.findByIdAndUpdate(req.params.id, participant, {}, function (err, theparticipant) {

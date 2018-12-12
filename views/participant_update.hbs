@@ -17,6 +17,16 @@
 	<input name="address" type="text" id="address" value="{{participant.address}}"><br><br>
 	<label for="email">Email:</label><br>
 	<input name="email" type="text" id="email" value="{{participant.email}}"><br><br>
+	<label for="school">School:</label><br>
+	<select name=school" required='true'>
+		<option value="">Select One</option>
+		{{#each schools}}<option value="{{_id}}">{{hsName}}</option>{{/each}}
+	</select><br><br>
+	<label for="interests">Topics:</label><br>
+	<select name=interests" required='true'>
+		<option value="">Select One</option>
+		{{#each interests}}<option value="{{_id}}">{{title}}</option>{{/each}}
+	</select><br><br>
 	<input type="submit" value="update Participant"><br>
 </form>
 	{{#if errors}}
