@@ -34,6 +34,27 @@
 </style>
 </head>
 <body>
+
+<li>Sessions: {{data.Session_count}}</li>
+<li>Topics: {{data.Topic_count}}</li>
+<li>Presenters: {{data.Presenter_count}}</li>
+<li>Rooms: {{data.Room_count}}</li>
+
+<form action="" method="">
+	<select name="Name" required='true'>
+		<option value="">Select One</option>
+		{{#each schedule_list}}
+		<option value="{{sessionNum}}">{{sessionNum}}</option>
+		{{/each}}
+	</select>
+</form>
+	{{#if schedule_list}}
+    {{#each schedule_list}}
+		<li>{{this.session}}</li>
+	{{/each}}
+	{{else}}
+		<h1>Schedule Not Available</h1>
+	{{/if}}
 <div id="btnContainer">
   <button class="btn" onclick="listView()"><i class="fa fa-bars"></i> List</button> 
   <button class="btn active" onclick="gridView()"><i class="fa fa-th-large"></i> Grid</button>
