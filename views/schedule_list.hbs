@@ -1,12 +1,10 @@
-<ul>
-	
-    {{#if schedule_list}}
-	<li>data is being fetched. variable works.</li>
-    {{#each schedule_list}}
-    <li>{{schedule.topics}}</li>
-    {{/each}}
-    {{else}}
-        <h1>Nothing Here</h1>
-    {{/if}}
-</ul>
-<a href="/catalog/Schedule/create">Create New Schedule</a>
+<table style="width:80%">
+<tr>
+<th></th>
+{{#each sessions}}
+<th>Session {{sessionNum}}</th>
+{{/each}}
+</tr>
+{{#each rooms}}
+<tr><td><b>{{roomNum}}</b></td></tr>
+{{/each}}

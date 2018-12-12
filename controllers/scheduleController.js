@@ -30,16 +30,20 @@ exports.index = function(req, res) {
 };
 
 // Display list.
-exports.schedule_list = function(req, res, next) {
-	Topic.find({}, 'topicCode') // This part throws an error, but the idea here is to grab all the objects from the Topic model and display them on the list page.
-	//Here there would also be similar functions for the other models to. All the data would therefore be displayed on a table.
-    .populate('topicCode')
-    .exec(function (err, list_topics) {
-      if (err) { return next(err); }
-      //Successful, so render
-	  console.log(list_topics);
-      res.render('schedule_list', { title: 'Topic List', schedule_list: list_topics });
-    });
+exports.schedule_list = function(req, res) {
+	
+	async.parallel({
+		session: function(callback) {
+			Session.find({},'sessionNum').exec(callback);
+		},
+		room: function(callback) {
+			Room.find({}, 'roomNum').exec(callback);
+		},
+	}, function (err, results) {
+		if (err) { return next(err);}
+		console.log(results);
+		res.render('schedule_list', { title: 'Schedule', error: err, sessions: results.session, rooms: results.room })
+	})
 };
 
 // Display detail page.
