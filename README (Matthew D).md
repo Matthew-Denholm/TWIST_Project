@@ -6,7 +6,7 @@ Students:
 3. Caroline Reed
 
 Objective:
-The main objective of this project was to create the back-end database side of a website for a client. 
+The main objective of this project was to create the back-end database side of a website for a client. It was for a program called TWIST (Teen Women In Science and Technology), a one-day conference to expose teen women across the state to various career possibilities. The overall end goal was to create a website/application that allows students to sign-up for sessions of their interest, and have a schedule be generated to best fit the interests of all the students.
 
 My Contributions:
 I contributed a lot all over the place on the website, but the majority was on creating controllers and standardizing models. The major ones I worked on were School, Session, and Schedule. The second majority were the room and topic models and controllers (these were done after the completion of the School and Session tasks). I also contributed to the layout of the web pages, particularly the same ones as the major three I worked on (School, session, and Schedule). I did minor corrections and improvements in the other tasks throughout the project when asked or needed as well.
